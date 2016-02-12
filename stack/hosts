@@ -1,0 +1,1 @@
+lemp ansible_ssh_host=web1.myapp.dev ansible_ssh_port=22

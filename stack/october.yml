@@ -1,0 +1,10 @@
+- hosts: lemp
+  gather_facts: yes
+
+  vars_files:
+    - vars/main.yml
+    - vars/october.yml
+
+  roles:
+    - geerlingguy.git
+    - qbunt.october

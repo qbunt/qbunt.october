@@ -1,0 +1,49 @@
+---
+php_webserver_daemon: nginx
+php_enable_php_fpm: true
+php_enablerepo: remi
+php_packages:
+  - php5
+  - php5-cli
+  - php5-common
+  - php5-curl
+  - php5-gd
+  - php5-imap
+  - php5-ldap
+  - php-pear
+  - php5-fpm
+  - php5-json
+
+domain: "web1.myapp.dev"
+
+mysql_root_password: root
+mysql_enablerepo: remi
+
+nginx_worker_connections: 1024
+nginx_vhosts:
+  - listen: "80 default_server"
+    server_name: "{{domain}}"
+    root: "/var/www/{{domain}}"
+    index: "index.php index.html index.htm"
+    extra_parameters: |
+      location / {
+          try_files $uri $uri/ /index.php$is_args$args;
+      }
+      location ~ \.php$ {
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass unix:/var/run/php5-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+      }
+      rewrite ^themes/.*/(layouts|pages|partials)/.*.htm /index.php break;
+      rewrite ^bootstrap/.* /index.php break;
+      rewrite ^config/.* /index.php break;
+      rewrite ^vendor/.* /index.php break;
+      rewrite ^storage/cms/.* /index.php break;
+      rewrite ^storage/logs/.* /index.php break;
+      rewrite ^storage/framework/.* /index.php break;
+      rewrite ^storage/temp/protected/.* /index.php break;
+      rewrite ^storage/app/uploads/protected/.* /index.php break;
+
+nginx_remove_default_vhost: true

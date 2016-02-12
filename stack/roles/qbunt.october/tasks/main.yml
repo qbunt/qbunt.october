@@ -1,0 +1,6 @@
+---
+- name: Run composer project create
+  composer:
+    command: "create-project"
+    arguments: "october/october myoctober dev-master"
+    working_dir: "/var/www/{{domain}}"
