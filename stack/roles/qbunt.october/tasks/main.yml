@@ -1,6 +1,12 @@
 ---
+
+- stat: path="{{october_location}}"
+  register: p
+
 - name: Run composer project create
   composer:
     command: "create-project"
     arguments: "october/october myoctober dev-master"
     working_dir: "/var/www/{{domain}}"
+    when: p.stat.exists == False
+
